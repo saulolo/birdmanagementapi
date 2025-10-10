@@ -63,5 +63,4 @@ public class Sighting implements Serializable {
         this.createdDate = LocalDateTime.now();
     }
 
-
 }
