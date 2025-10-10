@@ -1,10 +1,10 @@
-package edu.education.birdmanagementapi.domain.service.impl;
+package edu.education.birdmanagementapi.service.impl;
 
 import edu.education.birdmanagementapi.domain.dto.request.FamilyRequestDTO;
 import edu.education.birdmanagementapi.domain.dto.response.FamilyResponseDTO;
 import edu.education.birdmanagementapi.domain.entity.Family;
 import edu.education.birdmanagementapi.domain.mapper.FamilyMapper;
-import edu.education.birdmanagementapi.domain.service.interfaces.IFamilyService;
+import edu.education.birdmanagementapi.service.interfaces.IFamilyService;
 import edu.education.birdmanagementapi.repository.FamilyRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

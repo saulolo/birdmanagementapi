@@ -1,4 +1,4 @@
-package edu.education.birdmanagementapi.domain.service.interfaces;
+package edu.education.birdmanagementapi.service.interfaces;
 
 import edu.education.birdmanagementapi.domain.dto.request.FamilyRequestDTO;
 import edu.education.birdmanagementapi.domain.dto.response.FamilyResponseDTO;

@@ -44,7 +44,6 @@ public class Family implements Serializable {
     @OneToMany(mappedBy = "family", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<Bird> birds = new HashSet<>();
 
-
     @PrePersist
     private void beforePersisting() {
         this.createdAt = LocalDateTime.now();
