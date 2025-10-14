@@ -24,10 +24,9 @@ public class FamilyController {
     private final IFamilyService familyService;
 
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<ApiResponseDTO<FamilyResponseDTO>> createFamily(@Valid @RequestBody FamilyRequestDTO familyRequestDTO,
                                                                           HttpServletRequest request) {
-        try {
             FamilyResponseDTO createdFamily = familyService.createFamily(familyRequestDTO);
             ApiResponseDTO<FamilyResponseDTO> response = ApiResponseDTO.<FamilyResponseDTO>builder()
                     .success(true)
@@ -39,16 +38,13 @@ public class FamilyController {
 
             log.info("Familia creada: {}", createdFamily.name());
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
+}
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<FamilyResponseDTO>> updateFamily(@PathVariable Long id,
                                                                           @Valid @RequestBody FamilyRequestDTO familyRequestDTO,
                                                                           HttpServletRequest request) {
-        try {
+
             FamilyResponseDTO updatedFamily = familyService.updateFamily(id, familyRequestDTO);
             ApiResponseDTO<FamilyResponseDTO> response = ApiResponseDTO.<FamilyResponseDTO>builder()
                     .success(true)
@@ -60,13 +56,10 @@ public class FamilyController {
 
             log.info("Familia actualizada: {}", updatedFamily.name());
             return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
     }
 
-    @GetMapping("/findAll")
-    public ResponseEntity<ApiResponseDTO<List<FamilyResponseDTO>>> findAllFamilies(HttpServletRequest request) {
+    @GetMapping()
+    public ResponseEntity<ApiResponseDTO<List<FamilyResponseDTO>>> getAllFamilies(HttpServletRequest request) {
         List<FamilyResponseDTO> allFamilies = familyService.findAllFamilies();
 
         ApiResponseDTO<List<FamilyResponseDTO>> response = ApiResponseDTO.<List<FamilyResponseDTO>>builder()
@@ -81,8 +74,8 @@ public class FamilyController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/findById/{id}")
-    public ResponseEntity<ApiResponseDTO<FamilyResponseDTO>> findFamilyById(@PathVariable Long id,
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponseDTO<FamilyResponseDTO>> getFamilyById(@PathVariable Long id,
                                                                             HttpServletRequest request) {
         FamilyResponseDTO familyById = familyService.findFamilyById(id);
         log.debug("Consultando familia con ID: {}", id);
@@ -98,8 +91,8 @@ public class FamilyController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/findByName")
-    public ResponseEntity<ApiResponseDTO<FamilyResponseDTO>> findFamilyByName(@RequestParam String name,
+    @GetMapping("/by-name")
+    public ResponseEntity<ApiResponseDTO<FamilyResponseDTO>> getFamilyByName(@RequestParam String name,
                                                                               HttpServletRequest request) {
         FamilyResponseDTO familyByName = familyService.findFamilyByName(name);
         log.debug("Consultando familia con nombre: {}", name);
@@ -116,7 +109,7 @@ public class FamilyController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/deleteById/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<Void>> deleteFamilyById(@PathVariable Long id, HttpServletRequest request) {
 
         familyService.deleteFamilyById(id);

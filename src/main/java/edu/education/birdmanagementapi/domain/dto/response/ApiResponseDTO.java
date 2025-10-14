@@ -8,10 +8,11 @@ import java.time.LocalDateTime;
 
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"success", "message", "data", "timestamp", "path"})
+@JsonPropertyOrder({"success", "message", "errorCode", "data", "timestamp", "path"})
 public record ApiResponseDTO<T>(
         boolean success,
         String message,
+        String errorCode,
         T data,
         LocalDateTime timestamp,
         String path) {

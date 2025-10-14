@@ -4,9 +4,10 @@ import edu.education.birdmanagementapi.domain.dto.request.FamilyRequestDTO;
 import edu.education.birdmanagementapi.domain.dto.response.FamilyResponseDTO;
 import edu.education.birdmanagementapi.domain.entity.Family;
 import edu.education.birdmanagementapi.domain.mapper.FamilyMapper;
-import edu.education.birdmanagementapi.service.interfaces.IFamilyService;
+import edu.education.birdmanagementapi.exception.ConflictException;
+import edu.education.birdmanagementapi.exception.ResourceNotFoundException;
 import edu.education.birdmanagementapi.repository.FamilyRepository;
-import jakarta.persistence.EntityNotFoundException;
+import edu.education.birdmanagementapi.service.interfaces.IFamilyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class FamilyServiceImpl implements IFamilyService {
         boolean isExistingFamily = familyRepository.existsByName(familyRequestDTO.name());
         if (isExistingFamily) {
             log.warn("Intento de creación de familia duplicada: {}", familyRequestDTO.name());
-            throw new IllegalArgumentException("La familia: " + familyRequestDTO.name() + " ya existe.");
+            throw new ConflictException("La familia: " + familyRequestDTO.name() + " ya se ecuentra registrada.");
         }
         Family newFamily = familyMapper.toFamilyEntity(familyRequestDTO);
         Family createdFamily = familyRepository.save(newFamily);
@@ -40,7 +41,7 @@ public class FamilyServiceImpl implements IFamilyService {
     @Transactional
     public FamilyResponseDTO updateFamily(Long id, FamilyRequestDTO familyRequestDTO) {
         Family existingFamily = familyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No se encuentra la familia con Id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la familia con Id: " + id));
 
         existingFamily.setName(familyRequestDTO.name());
         existingFamily.setDescription(familyRequestDTO.description());
@@ -62,7 +63,7 @@ public class FamilyServiceImpl implements IFamilyService {
     @Transactional(readOnly = true)
     public FamilyResponseDTO findFamilyById(Long id) {
         Family existingFamily = familyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No se encuentra la familia con Id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encuentra la familia con Id: " + id));
 
         log.debug("Consultando familia por Id: {}", id);
         return familyMapper.toFamilyResponseDTO(existingFamily);
@@ -72,7 +73,7 @@ public class FamilyServiceImpl implements IFamilyService {
     @Transactional(readOnly = true)
     public FamilyResponseDTO findFamilyByName(String name) {
         Family existingFamily = familyRepository.findByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("No se encuentra la familia con nombre: " + name));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encuentra la familia con nombre: " + name));
         log.debug("Consultando familia por nombre: {}", name);
         return familyMapper.toFamilyResponseDTO(existingFamily);
     }
@@ -82,7 +83,7 @@ public class FamilyServiceImpl implements IFamilyService {
     public void deleteFamilyById(Long id) {
         if (!familyRepository.existsById(id)) {
             log.warn("Intentando eliminar familia inesxistente con Id: {}", id);
-            throw new EntityNotFoundException("No se encuentra la familia con Id: " + id);
+            throw new ResourceNotFoundException("No se encuentra la familia con Id: " + id);
         }
 
         familyRepository.deleteById(id);
