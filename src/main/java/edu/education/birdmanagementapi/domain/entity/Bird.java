@@ -1,6 +1,7 @@
 package edu.education.birdmanagementapi.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"family", "habitats"})
 @Table(name = "birds")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Bird implements Serializable {
@@ -31,7 +33,7 @@ public class Bird implements Serializable {
     @Column(name = "scientific_name", nullable = false, length = 50, unique = true)
     String scientificName;
 
-    @Column(name = "conservation_model", nullable = false, length = 50)
+    @Column(name = "conservation_model", nullable = false)
     String conservationModel;
 
     @Column(name = "notes")
@@ -39,11 +41,13 @@ public class Bird implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_family")
+    @JsonIgnoreProperties({"birds"})
     Family family;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "birds_habitats", joinColumns = @JoinColumn(name = "id_bird"), inverseJoinColumns = @JoinColumn(name = "id_habitat"))
     @Builder.Default
+    @JsonIgnoreProperties({"birds"})
     Set<Habitat> habitats = new HashSet<>();
 
     @Column(name = "created_at", nullable = false)
