@@ -11,11 +11,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 
+/**
+ * Manejador global de excepciones para toda la aplicación.
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
 
+    /**
+     * Maneja excepciones personalizadas de tipo {@link ApiException}.
+     */
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiResponseDTO<Void>> handleApiException(ApiException ex, HttpServletRequest request) {
         log.warn("Error controlado: {} - {}", ex.getErrorCode(), ex.getMessage());
@@ -31,7 +37,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatus()).body(response);
     }
 
-
+    /**
+     * Maneja errores de validación en los DTOs.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponseDTO<Void>> handleValidationException(MethodArgumentNotValidException ex,
                                                                           HttpServletRequest request) {
@@ -55,7 +63,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-
+    /**
+     * Maneja errores no controlados (genéricos).
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponseDTO<Void>> handleGenericException(Exception ex, HttpServletRequest request) {
         log.error("Error inesperado: ", ex);

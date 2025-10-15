@@ -3,8 +3,11 @@ package edu.education.birdmanagementapi.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+/**
+ * Excepción base para todas las excepciones personalizadas de la API.
+ */
 @Getter
-public abstract class ApiException extends RuntimeException{
+public abstract class ApiException extends RuntimeException {
 
     private final HttpStatus status;
     private final String errorCode;

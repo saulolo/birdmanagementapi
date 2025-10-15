@@ -12,10 +12,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper encargado de convertir entre entidades Bird y sus DTOs asociados.
+ */
 @Component
 public class BirdMapper {
 
 
+    /**
+     * Convierte una entidad {@link Bird} a un {@link BirdResponseDTO}.
+     *
+     * @param bird entidad de ave
+     * @return DTO de respuesta
+     */
     public BirdResponseDTO toBirdResponseDTO(Bird bird) {
         if (bird == null) {
             return null;
@@ -35,6 +44,14 @@ public class BirdMapper {
                 .build();
     }
 
+    /**
+     * Convierte un {@link BirdRequestDTO} en una entidad {@link Bird}.
+     *
+     * @param birdRequestDTO DTO de solicitud
+     * @param family         familia asociada
+     * @param habitats       conjunto de hábitats
+     * @return entidad Bird
+     */
     public Bird toBirdEntity(BirdRequestDTO birdRequestDTO, Family family, Set<Habitat> habitats) {
         if (birdRequestDTO == null) {
             return null;
@@ -49,6 +66,12 @@ public class BirdMapper {
                 .build();
     }
 
+    /**
+     * Convierte una lista de entidades {@link Bird} a una lista de {@link BirdResponseDTO}.
+     *
+     * @param birds lista de entidades
+     * @return lista de DTOs
+     */
     public List<BirdResponseDTO> toBirdResponseList(List<Bird> birds) {
         if (birds == null || birds.isEmpty()) {
             return Collections.emptyList();

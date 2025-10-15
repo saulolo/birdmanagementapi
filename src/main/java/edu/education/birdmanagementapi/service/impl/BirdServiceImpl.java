@@ -33,28 +33,24 @@ public class BirdServiceImpl implements IBirdService {
     private final BirdMapper birdMapper;
 
 
+    /**
+     * Crea una nueva ave validando duplicados y relaciones.
+     */
     @Override
     @Transactional
     public BirdResponseDTO createBird(BirdRequestDTO birdRequestDTO) {
-        boolean existsBird = birdRepository.existsByCommonNameOrScientificName(
-                birdRequestDTO.commonName(),
-                birdRequestDTO.scientificName()
-        );
+        boolean existsBird = birdRepository.existsByCommonNameOrScientificName(birdRequestDTO.commonName(), birdRequestDTO.scientificName());
 
         if (existsBird) {
             log.warn("Intento de creación duplicada: {}", birdRequestDTO.scientificName());
             throw new ConflictException("Ya existe un ave con el mismo nombre común o científico.");
         }
 
-        Family family = familyRepository.findById(birdRequestDTO.idFamily())
-                .orElseThrow(() -> new ResourceNotFoundException("No se encuentra la familia con ID: " + birdRequestDTO.idFamily()));
+        Family family = familyRepository.findById(birdRequestDTO.idFamily()).orElseThrow(() -> new ResourceNotFoundException("No se encuentra la familia con ID: " + birdRequestDTO.idFamily()));
 
         Set<Habitat> habitats = new HashSet<>();
         if (birdRequestDTO.idHabitats() != null && !birdRequestDTO.idHabitats().isEmpty()) {
-            habitats = birdRequestDTO.idHabitats().stream()
-                    .map(id -> habitatRepository.findById(id)
-                            .orElseThrow(() -> new ResourceNotFoundException("No se encuentra el hábitat con ID: " + id)))
-                    .collect(Collectors.toSet());
+            habitats = birdRequestDTO.idHabitats().stream().map(id -> habitatRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encuentra el hábitat con ID: " + id))).collect(Collectors.toSet());
         }
 
         Bird newBird = birdMapper.toBirdEntity(birdRequestDTO, family, habitats);
@@ -64,26 +60,24 @@ public class BirdServiceImpl implements IBirdService {
         return birdMapper.toBirdResponseDTO(createdBird);
     }
 
+    /**
+     * Actualiza un ave existente.
+     */
     @Override
     @Transactional
     public BirdResponseDTO updateBird(Long id, BirdRequestDTO birdRequestDTO) {
-        Bird existingBird = birdRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encuentra el ave con ID: " + id));
+        Bird existingBird = birdRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encuentra el ave con ID: " + id));
 
         existingBird.setCommonName(birdRequestDTO.commonName());
         existingBird.setScientificName(birdRequestDTO.scientificName());
         existingBird.setConservationModel(birdRequestDTO.conservationModel());
         existingBird.setNotes(birdRequestDTO.notes());
 
-        Family family = familyRepository.findById(birdRequestDTO.idFamily())
-                .orElseThrow(() -> new ResourceNotFoundException("No se encuentra la familia con ID: " + birdRequestDTO.idFamily()));
+        Family family = familyRepository.findById(birdRequestDTO.idFamily()).orElseThrow(() -> new ResourceNotFoundException("No se encuentra la familia con ID: " + birdRequestDTO.idFamily()));
         existingBird.setFamily(family);
 
         if (birdRequestDTO.idHabitats() != null) {
-            Set<Habitat> habitats = birdRequestDTO.idHabitats().stream()
-                    .map(idHabitat -> habitatRepository.findById(idHabitat)
-                            .orElseThrow(() -> new ResourceNotFoundException("No se encuentra el hábitat con ID: " + idHabitat)))
-                    .collect(Collectors.toSet());
+            Set<Habitat> habitats = birdRequestDTO.idHabitats().stream().map(idHabitat -> habitatRepository.findById(idHabitat).orElseThrow(() -> new ResourceNotFoundException("No se encuentra el hábitat con ID: " + idHabitat))).collect(Collectors.toSet());
             existingBird.setHabitats(habitats);
         }
 
@@ -93,14 +87,19 @@ public class BirdServiceImpl implements IBirdService {
         return birdMapper.toBirdResponseDTO(updatedBird);
     }
 
+    /**
+     * Busca un ave por su ID.
+     */
     @Override
     @Transactional(readOnly = true)
     public BirdResponseDTO findBirdById(Long id) {
-        Bird bird = birdRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encuentra el ave con ID: " + id));
+        Bird bird = birdRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encuentra el ave con ID: " + id));
         return birdMapper.toBirdResponseDTO(bird);
     }
 
+    /**
+     * Obtiene todas las aves registradas.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<BirdResponseDTO> findAllBirds() {
@@ -108,6 +107,9 @@ public class BirdServiceImpl implements IBirdService {
         return birdMapper.toBirdResponseList(birds);
     }
 
+    /**
+     * Elimina un ave por su ID.
+     */
     @Override
     @Transactional
     public void deleteBirdById(Long id) {
@@ -118,13 +120,14 @@ public class BirdServiceImpl implements IBirdService {
         log.info("Ave eliminada con ID: {}", id);
     }
 
+    /**
+     * Busca aves por nombre común o científico.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<BirdResponseDTO> searchByName(String name) {
-        List<Bird> birds = birdRepository.findAll().stream()
-                .filter(bird -> bird.getCommonName().toLowerCase().contains(name.toLowerCase()) ||
-                        bird.getScientificName().toLowerCase().contains(name.toLowerCase()))
-                .toList();
+        List<Bird> birds = birdRepository.findAll().stream().filter(bird -> bird.getCommonName().toLowerCase()
+                .contains(name.toLowerCase()) || bird.getScientificName().toLowerCase().contains(name.toLowerCase())).toList();
 
         if (birds.isEmpty()) {
             throw new ResourceNotFoundException("No se encontraron aves con el nombre: " + name);

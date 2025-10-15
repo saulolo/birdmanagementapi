@@ -23,6 +23,13 @@ public class BirdController {
 
     private final IBirdService birdService;
 
+    /**
+     * Crea una nueva ave en el sistema.
+     *
+     * @param birdRequestDTO datos de la nueva ave
+     * @param request        objeto HTTP para obtener la ruta de la petición
+     * @return respuesta con los datos del ave creada
+     */
     @PostMapping
     public ResponseEntity<ApiResponseDTO<BirdResponseDTO>> createBird(
             @Valid @RequestBody BirdRequestDTO birdRequestDTO,
@@ -42,6 +49,14 @@ public class BirdController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /**
+     * Actualiza los datos de un ave existente.
+     *
+     * @param id             identificador del ave a actualizar
+     * @param birdRequestDTO datos actualizados del ave
+     * @param request        objeto HTTP con información de la solicitud
+     * @return respuesta con los datos del ave actualizada
+     */
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<BirdResponseDTO>> updateBird(
             @PathVariable Long id,
@@ -62,6 +77,12 @@ public class BirdController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Obtiene el listado completo de aves registradas.
+     *
+     * @param request objeto HTTP para registrar la ruta de acceso
+     * @return lista de aves en el sistema
+     */
     @GetMapping
     public ResponseEntity<ApiResponseDTO<List<BirdResponseDTO>>> getAllBirds(HttpServletRequest request) {
         List<BirdResponseDTO> birds = birdService.findAllBirds();
@@ -78,6 +99,13 @@ public class BirdController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Consulta un ave específica por su identificador.
+     *
+     * @param id      identificador del ave
+     * @param request objeto HTTP para registrar la ruta
+     * @return detalles del ave encontrada
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<BirdResponseDTO>> getBirdById(
             @PathVariable Long id,
@@ -97,6 +125,13 @@ public class BirdController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Busca aves por nombre común o científico.
+     *
+     * @param name    término de búsqueda
+     * @param request objeto HTTP con la ruta de la solicitud
+     * @return lista de aves coincidentes con el nombre
+     */
     @GetMapping("/by-name")
     public ResponseEntity<ApiResponseDTO<List<BirdResponseDTO>>> getBirdsByName(
             @RequestParam String name,
@@ -116,6 +151,13 @@ public class BirdController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Elimina un ave por su identificador.
+     *
+     * @param id      identificador del ave a eliminar
+     * @param request objeto HTTP con información de la solicitud
+     * @return confirmación de eliminación exitosa
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<Void>> deleteBirdById(
             @PathVariable Long id,

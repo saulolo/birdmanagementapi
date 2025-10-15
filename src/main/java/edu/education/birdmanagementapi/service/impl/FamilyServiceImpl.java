@@ -23,6 +23,9 @@ public class FamilyServiceImpl implements IFamilyService {
     private final FamilyRepository familyRepository;
     private final FamilyMapper familyMapper;
 
+    /**
+     * Crea una nueva familia validando duplicados.
+     */
     @Override
     @Transactional
     public FamilyResponseDTO createFamily(FamilyRequestDTO familyRequestDTO) {
@@ -37,6 +40,9 @@ public class FamilyServiceImpl implements IFamilyService {
         return familyMapper.toFamilyResponseDTO(createdFamily);
     }
 
+    /**
+     * Actualiza una familia existente.
+     */
     @Override
     @Transactional
     public FamilyResponseDTO updateFamily(Long id, FamilyRequestDTO familyRequestDTO) {
@@ -51,6 +57,9 @@ public class FamilyServiceImpl implements IFamilyService {
         return familyMapper.toFamilyResponseDTO(updatedFamily);
     }
 
+    /**
+     * Lista todas las familias registradas.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<FamilyResponseDTO> findAllFamilies() {
@@ -59,6 +68,9 @@ public class FamilyServiceImpl implements IFamilyService {
         return familyMapper.toFamilyResponseList(familyList);
     }
 
+    /**
+     * Busca una familia por ID.
+     */
     @Override
     @Transactional(readOnly = true)
     public FamilyResponseDTO findFamilyById(Long id) {
@@ -69,6 +81,9 @@ public class FamilyServiceImpl implements IFamilyService {
         return familyMapper.toFamilyResponseDTO(existingFamily);
     }
 
+    /**
+     * Busca una familia por nombre.
+     */
     @Override
     @Transactional(readOnly = true)
     public FamilyResponseDTO findFamilyByName(String name) {
@@ -78,6 +93,9 @@ public class FamilyServiceImpl implements IFamilyService {
         return familyMapper.toFamilyResponseDTO(existingFamily);
     }
 
+    /**
+     * Elimina una familia por su ID.
+     */
     @Override
     @Transactional
     public void deleteFamilyById(Long id) {

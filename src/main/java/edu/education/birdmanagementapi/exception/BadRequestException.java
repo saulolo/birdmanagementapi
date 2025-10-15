@@ -2,6 +2,9 @@ package edu.education.birdmanagementapi.exception;
 
 import org.springframework.http.HttpStatus;
 
+/**
+ * Excepción para solicitudes inválidas (400).
+ */
 public class BadRequestException extends ApiException{
 
     public BadRequestException(String message) {

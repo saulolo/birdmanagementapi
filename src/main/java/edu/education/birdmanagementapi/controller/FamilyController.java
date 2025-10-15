@@ -24,40 +24,61 @@ public class FamilyController {
     private final IFamilyService familyService;
 
 
+    /**
+     * Crea una nueva familia.
+     *
+     * @param familyRequestDTO datos de la familia
+     * @param request          información HTTP
+     * @return familia creada
+     */
     @PostMapping()
     public ResponseEntity<ApiResponseDTO<FamilyResponseDTO>> createFamily(@Valid @RequestBody FamilyRequestDTO familyRequestDTO,
                                                                           HttpServletRequest request) {
-            FamilyResponseDTO createdFamily = familyService.createFamily(familyRequestDTO);
-            ApiResponseDTO<FamilyResponseDTO> response = ApiResponseDTO.<FamilyResponseDTO>builder()
-                    .success(true)
-                    .message("Familia creada con éxito.")
-                    .data(createdFamily)
-                    .timestamp(LocalDateTime.now())
-                    .path(request.getRequestURI())
-                    .build();
+        FamilyResponseDTO createdFamily = familyService.createFamily(familyRequestDTO);
+        ApiResponseDTO<FamilyResponseDTO> response = ApiResponseDTO.<FamilyResponseDTO>builder()
+                .success(true)
+                .message("Familia creada con éxito.")
+                .data(createdFamily)
+                .timestamp(LocalDateTime.now())
+                .path(request.getRequestURI())
+                .build();
 
-            log.info("Familia creada: {}", createdFamily.name());
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-}
+        log.info("Familia creada: {}", createdFamily.name());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
+    /**
+     * Actualiza una familia existente.
+     *
+     * @param id               id de la familia
+     * @param familyRequestDTO nuevos datos
+     * @param request          información HTTP
+     * @return familia actualizada
+     */
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<FamilyResponseDTO>> updateFamily(@PathVariable Long id,
                                                                           @Valid @RequestBody FamilyRequestDTO familyRequestDTO,
                                                                           HttpServletRequest request) {
 
-            FamilyResponseDTO updatedFamily = familyService.updateFamily(id, familyRequestDTO);
-            ApiResponseDTO<FamilyResponseDTO> response = ApiResponseDTO.<FamilyResponseDTO>builder()
-                    .success(true)
-                    .message("Familia actualizada con éxito.")
-                    .data(updatedFamily)
-                    .timestamp(LocalDateTime.now())
-                    .path(request.getRequestURI())
-                    .build();
+        FamilyResponseDTO updatedFamily = familyService.updateFamily(id, familyRequestDTO);
+        ApiResponseDTO<FamilyResponseDTO> response = ApiResponseDTO.<FamilyResponseDTO>builder()
+                .success(true)
+                .message("Familia actualizada con éxito.")
+                .data(updatedFamily)
+                .timestamp(LocalDateTime.now())
+                .path(request.getRequestURI())
+                .build();
 
-            log.info("Familia actualizada: {}", updatedFamily.name());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+        log.info("Familia actualizada: {}", updatedFamily.name());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    /**
+     * Obtiene todas las familias.
+     *
+     * @param request información HTTP
+     * @return lista de familias
+     */
     @GetMapping()
     public ResponseEntity<ApiResponseDTO<List<FamilyResponseDTO>>> getAllFamilies(HttpServletRequest request) {
         List<FamilyResponseDTO> allFamilies = familyService.findAllFamilies();
@@ -74,9 +95,16 @@ public class FamilyController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Obtiene una familia por su ID.
+     *
+     * @param id      id de la familia
+     * @param request información HTTP
+     * @return familia encontrada
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<FamilyResponseDTO>> getFamilyById(@PathVariable Long id,
-                                                                            HttpServletRequest request) {
+                                                                           HttpServletRequest request) {
         FamilyResponseDTO familyById = familyService.findFamilyById(id);
         log.debug("Consultando familia con ID: {}", id);
         ApiResponseDTO<FamilyResponseDTO> response = ApiResponseDTO.<FamilyResponseDTO>builder()
@@ -91,9 +119,16 @@ public class FamilyController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Busca una familia por nombre.
+     *
+     * @param name    nombre de la familia
+     * @param request información HTTP
+     * @return familia encontrada
+     */
     @GetMapping("/by-name")
     public ResponseEntity<ApiResponseDTO<FamilyResponseDTO>> getFamilyByName(@RequestParam String name,
-                                                                              HttpServletRequest request) {
+                                                                             HttpServletRequest request) {
         FamilyResponseDTO familyByName = familyService.findFamilyByName(name);
         log.debug("Consultando familia con nombre: {}", name);
 
@@ -109,6 +144,13 @@ public class FamilyController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Elimina una familia por su ID.
+     *
+     * @param id      id de la familia
+     * @param request información HTTP
+     * @return confirmación de eliminación
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponseDTO<Void>> deleteFamilyById(@PathVariable Long id, HttpServletRequest request) {
 
