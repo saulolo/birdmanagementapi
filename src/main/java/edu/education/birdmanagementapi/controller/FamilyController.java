@@ -31,7 +31,7 @@ public class FamilyController {
      * @param request          información HTTP
      * @return familia creada
      */
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ApiResponseDTO<FamilyResponseDTO>> createFamily(@Valid @RequestBody FamilyRequestDTO familyRequestDTO,
                                                                           HttpServletRequest request) {
         FamilyResponseDTO createdFamily = familyService.createFamily(familyRequestDTO);
@@ -79,7 +79,7 @@ public class FamilyController {
      * @param request información HTTP
      * @return lista de familias
      */
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<ApiResponseDTO<List<FamilyResponseDTO>>> getAllFamilies(HttpServletRequest request) {
         List<FamilyResponseDTO> allFamilies = familyService.findAllFamilies();
 
