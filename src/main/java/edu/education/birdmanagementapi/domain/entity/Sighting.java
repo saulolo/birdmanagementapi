@@ -7,8 +7,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -25,14 +23,14 @@ public class Sighting implements Serializable {
     @Column(name = "id_sighting")
     Long idSighting;
 
-    @Column(name = "latitude", nullable = false)
+    @Column(name = "latitude")
     Double latitude;
 
-    @Column(name = "longitude", nullable = false)
+    @Column(name = "longitude")
     Double longitude;
 
     @Column(name = "sighting_date_time", nullable = false)
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime sightingDateTime;
 
     @Column(name = "notes")
@@ -55,7 +53,7 @@ public class Sighting implements Serializable {
     Country country;
 
     @Column(name = "created_date", nullable = false)
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime createdDate;
 
     @PrePersist

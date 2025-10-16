@@ -1,6 +1,5 @@
 package edu.education.birdmanagementapi.domain.entity;
 
-import edu.education.birdmanagementapi.domain.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
