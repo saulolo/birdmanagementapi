@@ -130,7 +130,7 @@ public class SightingController {
      * @param request HttpServletRequest para path
      * @return ApiResponseDTO con la lista de avistamientos
      */
-    @GetMapping("/birds/{idBird}/sighting")
+    @GetMapping("/birds/{idBird}/sightings")
     public ResponseEntity<ApiResponseDTO<List<SightingResponseDTO>>> getByBirdId(
             @PathVariable Long idBird,
             HttpServletRequest request) {
@@ -156,7 +156,7 @@ public class SightingController {
      * @param request HttpServletRequest para path
      * @return ApiResponseDTO con la lista de avistamientos
      */
-    @GetMapping("/users/{idUser}/sighting")
+    @GetMapping("/users/{idUser}/sightings")
     public ResponseEntity<ApiResponseDTO<List<SightingResponseDTO>>> getByUserId(
             @PathVariable Long idUser,
             HttpServletRequest request) {
@@ -182,7 +182,7 @@ public class SightingController {
      * @param request   HttpServletRequest para path
      * @return ApiResponseDTO con la lista de avistamientos
      */
-    @GetMapping("/countries/{idCountry}/sighting")
+    @GetMapping("/countries/{idCountry}/sightings")
     public ResponseEntity<ApiResponseDTO<List<SightingResponseDTO>>> getByCountryId(
             @PathVariable Long idCountry,
             HttpServletRequest request) {
@@ -208,7 +208,7 @@ public class SightingController {
      * @param request   HttpServletRequest para path
      * @return ApiResponseDTO con la lista de avistamientos
      */
-    @GetMapping("/habitats/{idHabitat}/sighting")
+    @GetMapping("/habitats/{idHabitat}/sightings")
     public ResponseEntity<ApiResponseDTO<List<SightingResponseDTO>>> getByHabitatId(
             @PathVariable Long idHabitat,
             HttpServletRequest request) {
