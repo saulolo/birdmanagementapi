@@ -1,5 +1,6 @@
 package edu.education.birdmanagementapi.config;
 
+import edu.education.birdmanagementapi.config.filter.JwtTokenValidator;
 import edu.education.birdmanagementapi.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * Clase de configuracin principal de Spring Security para la API Gestión de Avistamientos de Aves.
@@ -23,7 +25,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
 
     /**
      * Define la cadena de filtros de seguridad HTTP, incluyendo la gestin de CSRF, autenticacin,
@@ -34,7 +35,8 @@ public class SecurityConfig {
      * @throws Exception Si ocurre un error durante la configuracin.
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
+                                                   JwtTokenValidator jwtTokenValidator) throws Exception {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(Customizer.withDefaults())
@@ -43,18 +45,18 @@ public class SecurityConfig {
                 .authorizeHttpRequests(http -> {
 
                     /*---------------- Configuración de endpoints PÚBLICOS ----------------*/
-                    http.requestMatchers(HttpMethod.GET, "/bird-management/api/v1/auth/test").permitAll();
-                    http.requestMatchers(HttpMethod.POST, "/bird-management/api/v1/auth/login").permitAll();
-                    http.requestMatchers("/bird-management/api/v1/swagger-ui/**").permitAll();
-                    http.requestMatchers(HttpMethod.POST, "/bird-management/api/v1/users/create").permitAll();
+                    http.requestMatchers(HttpMethod.GET, "/method/test").permitAll();
+                    http.requestMatchers("/swagger-ui/**").permitAll();
+                    http.requestMatchers(HttpMethod.POST, "/users/create").permitAll();
+                    http.requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll();
 
                     // Permiso para view Sighting, es publico/INVITED
-                    http.requestMatchers(HttpMethod.GET, "/bird-management/api/v1/sightings").hasAnyAuthority("READ", "INVITED");
+                    http.requestMatchers(HttpMethod.GET, "/sightings").hasAnyAuthority("READ", "INVITED");
 
                     /*---------------- Configuración de endpoints PRIVADOS (por Permiso o Rol) ----------------*/
 
                     // Endpoint de prueba asegurado
-                    http.requestMatchers(HttpMethod.GET, "/auth/test-secured").hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.GET, "/method/test-secured").hasAuthority("READ");
 
                     // Endpoints de Sighting
                     http.requestMatchers(HttpMethod.POST, "/sightings").hasAnyRole("ADMIN", "DEVELOPER");
@@ -97,6 +99,7 @@ public class SecurityConfig {
                     /*---------------- Configuración del resto de endpoints ----------------*/
                     http.anyRequest().denyAll();
                 })
+                .addFilterBefore(jwtTokenValidator, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

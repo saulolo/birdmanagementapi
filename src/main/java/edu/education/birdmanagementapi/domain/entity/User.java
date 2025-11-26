@@ -55,10 +55,25 @@ public class User implements Serializable {
 
     @Column(name = "created_date", nullable = false)
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    LocalDateTime createdDate;
+    LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    LocalDateTime updatedAt;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "id_user"), inverseJoinColumns = @JoinColumn(name = "id_role"))
     Set<Role> roles = new HashSet<>();
+
+    @PrePersist
+    private void beforePersisting() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void modificationDate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
 }

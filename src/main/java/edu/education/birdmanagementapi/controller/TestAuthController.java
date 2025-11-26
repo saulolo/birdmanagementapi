@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Controlador de prueba para verificar la configuracin de Spring Security.
  */
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/method")
 public class TestAuthController {
 
 
